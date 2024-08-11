@@ -1,0 +1,225 @@
+.text-muted-custom {
+    color: #6c757d !important;
+  }
+  
+.card-top {
+    background: #006DAA !important;
+    height: 50px;
+}
+
+.card-subject {
+    float: left;
+    width: 50%;
+    height: 100%;
+    line-height: 50px;
+    font-size: 20px;
+}
+
+.card-info {
+    float: right;
+    width: 50%;
+    height: 100%
+}
+
+.card-timer {
+    float: right;
+    width: 100%;
+    height: 50%
+}
+
+.card-question {
+    float: right;
+    width: 100%;
+    height: 50%
+}
+
+.question-title-topic {
+    font-family: Tahoma, sans-serif;
+    font-size: 20px;
+}
+
+body.dark-mode.light-mode {
+    background-color: #e4e4e4;
+    color: #000000;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode.light-mode .card {
+    background-color: #e4e4e4;
+    color: #000000;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #191B19;
+    color: #696969;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .card {
+    background-color: #191B19;
+    color: #696969;
+    border: 1px solid #363A36;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .card-top {
+    background-color: #272927 !important;
+    color: #8D8E8E !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .btn {
+    background-color: #272927 !important;
+    color: #8D8E8E !important;
+    border-color: #363A36 !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+
+.dark-mode input {
+    background-color: #272927 !important;
+    border: 1px solid #363A36 !important;
+    color: #8D8E8E !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .question-answer {
+    background-color: #272927 !important;
+    color: #C0C4C4 !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .fixed-bottom {
+    background-color: #272927 !important;
+    color: #C0C4C4 !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .modal-content {
+    background-color: #272927 !important;
+    color: #C0C4C4 !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.card-text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+
+.card-text #q-answer br {
+    content: "";
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.correct-choice-show {
+    border: solid 1px #27ae60;
+    border-radius: 5px;
+    padding-bottom: 3px !important;
+    /* font-weight: bold; */
+}
+
+.choose-item input {
+    display: inline;
+}
+
+.choose-item label {
+    display: inline;
+}
+
+.choose-item {
+    /* display: inline-block; */
+    position: relative;
+    padding: 0 6px;
+    /* margin: 10px 0 0; */
+}
+
+.choose-item input[type='checkbox'] {
+    display: none;
+}
+
+.choose-item input[type='radio'] {
+    display: none;
+}
+
+.choose-item label:before {
+    content: " ";
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    margin: 0 5px 0 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    border: 2px solid #004c97;
+    background-color: transparent;
+}
+
+.dark-mode .choose-item label:before {
+    border: 2px solid #696969;
+}
+
+.dark-mode .choose-item input[type=radio]:checked+label:after {
+    background: #696969;
+}
+
+
+.choose-item input[type=radio]:checked+label:after {
+    border-radius: 12px;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    top: 11px;
+    left: 12px;
+    content: " ";
+    display: block;
+    background: #0d6efd;
+}
+
+.choose-item input[type=checkbox]+label:before {
+    content: " ";
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    margin: 0 5px 0 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 0px;
+    border: 2px solid #0d6efd;
+    background-color: transparent;
+}
+
+.dark-mode .choose-item input[type=checkbox]+label:before {
+    border: 2px solid #696969;
+}
+
+.dark-mode .choose-item input[type=checkbox]:checked+label:after {
+    background: #696969;
+}
+
+.choose-item input[type=checkbox]:checked+label:after {
+    border-radius: 0px;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    top: 11px;
+    left: 12px;
+    content: " ";
+    display: block;
+    background: #004c97;
+}
+
+.card-timer {
+    cursor: pointer;
+}
+
+#q-correct-img img{
+    max-width: 100%;
+    height: auto;
+}
+
+#q-question-img img{
+    max-width: 100%;
+    height: auto;
+}

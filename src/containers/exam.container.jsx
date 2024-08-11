@@ -4,7 +4,7 @@ import Firebase from '../firebase.js';
 import { ref, set, get, update, remove, child, onValue } from "firebase/database";
 
 
-class TestContainer extends Component {
+class ExamContainer extends Component {
   constructor(props) {
     super(props);
     const me = this;
@@ -25,10 +25,10 @@ class TestContainer extends Component {
     const { data } = this.state;
     return (
       <div>
-        
+        Study
       </div>
     );
   }
 }
 
-export default TestContainer;
+export default ExamContainer;
