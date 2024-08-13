@@ -25,7 +25,6 @@ class TestContainer extends Component {
     const { data } = this.state;
     return (
       <div>
-        
       </div>
     );
   }

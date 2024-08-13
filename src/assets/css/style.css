@@ -1,9 +1,12 @@
 .text-muted-custom {
     color: #6c757d !important;
   }
+
+  .card-background{
+    background: #006DAA !important;
+  }
   
 .card-top {
-    background: #006DAA !important;
     height: 50px;
 }
 
@@ -35,7 +38,7 @@
 
 .question-title-topic {
     font-family: Tahoma, sans-serif;
-    font-size: 20px;
+    font-size: 17px;
 }
 
 body.dark-mode.light-mode {
@@ -222,4 +225,16 @@ body.dark-mode {
 #q-question-img img{
     max-width: 100%;
     height: auto;
+}
+
+.display-block {
+    display: block!important;
+}
+
+.display-none {
+    display: none!important;
+}
+
+.modal {
+    background: rgba(0, 0, 0, 0.6);
 }
