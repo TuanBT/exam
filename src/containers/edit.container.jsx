@@ -5,7 +5,7 @@ import { ref, set, get, update, remove, child, onValue } from "firebase/database
 import { Route, NavLink, HashRouter } from "react-router-dom";
 
 
-class StudyContainer extends Component {
+class EditContainer extends Component {
 
   constructor(props) {
     super(props);
@@ -20,13 +20,16 @@ class StudyContainer extends Component {
     this.numberOfQuestion = 1389;
     this.currentMode = 0; // 0 = normal, 1 = dark, 2 = light
     this.textHeader = "PMP - Exam Topic";
-    this.countdownInterval;
-    this.timer = 60; // 1 minute in seconds
+    this.questionNumber = 1;
+    this.obj = {};
     this.information = {
       "questionNumber": 0,
       "questionQuestion": "",
       "questionAnswer": "",
+      "questionImage": "",
+      "questionAnswerOrg": "",
       "questionCorrect": "",
+      "questionCorrectImage": "",
       "questionNote": "",
       "sources": ['ExamTopic', 'StudyHall'],
       "subject": "",
@@ -34,7 +37,7 @@ class StudyContainer extends Component {
   }
 
   componentDidMount() {
-    document.title = 'Study';
+    document.title = 'Edit';
     this.main();
   }
 
@@ -45,110 +48,34 @@ class StudyContainer extends Component {
   }
 
   retrieveQuestion = (questionNumberIn) => {
-    this.startCountdown();
 
     document.getElementById('inputQuestionNumber').placeholder = '1 - ' + this.numberOfQuestion;
+    this.questionNumber = questionNumberIn;
 
-    let questionNumber = Math.floor(Math.random() * this.numberOfQuestion) + 1;
-    if (questionNumberIn !== 0) {
-      questionNumber = questionNumberIn;
+    if (questionNumberIn === 0) {
+      this.questionNumber = Math.floor(Math.random() * this.numberOfQuestion) + 1;
     }
-    // Save the current question number as the previous question
-    this.preQuestion = this.lastQuestion;
 
-    // Update the current question number
-    this.lastQuestion = questionNumber;
-
-    onValue(ref(this.db, '/subject/' + this.source + '/questions/' + questionNumber), (snapshot) => {
+    onValue(ref(this.db, '/subject/' + this.source + '/questions/' + this.questionNumber), (snapshot) => {
       const questionData = snapshot.val();
       if (questionData) {
         this.information["subject"] = this.textHeader;
         this.information["questionNumber"] = questionData.number;
         this.information["questionQuestion"] = questionData.question;
         document.getElementById('q-question-img').innerHTML = "<img src='" + questionData.questionImage + "'>";
+        this.information["questionImage"] = questionData.questionImage;
         this.information["questionAnswer"] = questionData.answer.split('<br/>');
+        this.information["questionAnswerOrg"] = questionData.answer;
         this.information["questionCorrect"] = questionData.correct;
         document.getElementById('q-correct-img').innerHTML = "<img src='" + questionData.correctImage + "'>";
+        this.information["questionCorrectImage"] = questionData.correctImage;
         this.information["questionNote"] = questionData.note;
-
-
-        const solutionCard = document.getElementById('solution-card');
-        solutionCard.style.display = 'none';
 
       } else {
         document.getElementById('questionDetails').innerHTML = '<p>No question found with the given number.</p>';
       }
       this.setState({ data: this.information });
     })
-  }
-
-
-  toggleSolution = () => {
-    const solutionCard = document.getElementById('solution-card');
-    if (solutionCard.style.display === 'none') {
-      solutionCard.style.display = 'block';
-    } else {
-      solutionCard.style.display = 'none';
-    }
-
-    const correctChoiceElements = document.querySelectorAll(".correct-choice");
-    const correctChoiceShowElements = document.querySelectorAll(".correct-choice-show");
-
-    correctChoiceElements.forEach(element => {
-      element.classList.replace("correct-choice", "correct-choice-show");
-    });
-
-    correctChoiceShowElements.forEach(element => {
-      element.classList.replace("correct-choice-show", "correct-choice");
-    });
-  };
-
-
-
-  startCountdown = () => {
-    this.stopCountdown();
-    const countdownElement = document.getElementById('countdown');
-
-    this.countdownInterval = setInterval(() => {
-      countdownElement.textContent = this.convertTimeToString(this.timer);
-      this.timer--;
-    }, 1000); // Update the countdown every 1 second
-  }
-
-  stopCountdown = () => {
-    const countdownElement = document.getElementById('countdown');
-
-    clearInterval(this.countdownInterval);
-    this.timer = 60;
-    countdownElement.textContent = this.convertTimeToString(this.timer);
-  }
-
-  convertTimeToString = (timer) => {
-    const isNegative = timer < 0;
-    const absoluteTimer = Math.abs(timer);
-    const minutes = Math.floor(absoluteTimer / 60);
-    const seconds = absoluteTimer % 60;
-    let timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-    if (isNegative) {
-      timeString = `-${timeString}`;
-    }
-
-    return timeString;
-  }
-
-  randomQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
-    this.retrieveQuestion(0);
-  }
-
-  backQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
-    this.retrieveQuestion(this.preQuestion);
   }
 
   previousQuestion = () => {
@@ -176,41 +103,6 @@ class StudyContainer extends Component {
     }
   }
 
-  toggleDarkMode = () => {
-    this.currentMode = (this.currentMode + 1) % 3;
-    switch (this.currentMode) {
-      case 0:
-        document.body.className = "normal-mode";
-        break;
-      case 1:
-        document.body.className = "dark-mode";
-        break;
-      case 2:
-        document.body.className = "dark-mode light-mode";
-        break;
-    }
-  }
-
-  resetCountdown = () => {
-    this.timer = 60;
-  }
-
-  increaseFontSize = () => {
-    var cardTextElements = document.querySelectorAll(".card-text");
-    cardTextElements.forEach(function (element) {
-      var currentSize = parseFloat(window.getComputedStyle(element).getPropertyValue('font-size'));
-      element.style.fontSize = (currentSize + 2) + "px";
-    });
-  }
-
-  decreaseFontSize = () => {
-    var cardTextElements = document.querySelectorAll(".card-text");
-    cardTextElements.forEach(function (element) {
-      var currentSize = parseFloat(window.getComputedStyle(element).getPropertyValue('font-size'));
-      element.style.fontSize = (currentSize - 2) + "px";
-    });
-  }
-
   chooseSource = (source) => {
     if (source === 'ExamTopic') {
       this.source = "PMP/ExamTopic";
@@ -230,6 +122,42 @@ class StudyContainer extends Component {
     }
   };
 
+  save = (type) => {
+    switch (type) {
+      case "question":
+        this.obj = {
+          "question": document.getElementById("txtQuestion").value
+        }
+        break;
+      case "questionImage":
+        this.obj = {
+          "questionImage": document.getElementById("txtQuestionImage").value
+        }
+        break;
+      case "answer":
+        this.obj = {
+          "answer": document.getElementById("txtAnswer").value
+        }
+        break;
+      case "correct":
+        this.obj = {
+          "correct": document.getElementById("txtCorrect").value
+        }
+        break;
+      case "correctImage":
+        this.obj = {
+          "correctImage": document.getElementById("txtCorrectImage").value
+        }
+        break;
+      case "note":
+        this.obj = {
+          "note": document.getElementById("txtNote").value
+        }
+        break;
+    }
+    update(ref(this.db, '/subject/' + this.source + '/questions/' + this.questionNumber), this.obj);
+  }
+
   showModal = () => {
     $('#modal').removeClass('modal display-none').addClass('modal display-block');
   };
@@ -246,7 +174,7 @@ class StudyContainer extends Component {
 
           <div className="d-grid gap-0 d-sm-flex justify-content-sm-center">
             <div className="input-group p-2">
-            <NavLink to="/"><button className="btn btn-success me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
+              <NavLink to="/"><button className="btn btn-success me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
               <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
                 <i className="fas fa-cog"></i>
               </button>
@@ -259,7 +187,7 @@ class StudyContainer extends Component {
 
 
           <div className="container-fluid pb-5 px-0">
-            <div className="card">
+            <div className="card bg-light">
 
               <div className="card-top card-background rounded-top text-white">
                 <div className="card-subject ps-3">
@@ -269,14 +197,12 @@ class StudyContainer extends Component {
 
                 </div>
                 <div className="card-info pe-3 text-end">
-                  <div className="card-timer">
-                    <span className="question-title-info" onClick={this.resetCountdown}><i className="fa-solid fa-stopwatch"></i> Time Remaining <span id="countdown">60</span>
-                    </span>
+                  <div className="card-question">
+                    <span><i className="fa-solid fa-pen-to-square"></i> Eidt Mode</span>
                   </div>
                   <div className="card-question">
                     <span className=""></span><i className="fas fa-book"></i> <span id="q-number">{data["questionNumber"]}</span>
                   </div>
-
                 </div>
               </div>
 
@@ -284,8 +210,28 @@ class StudyContainer extends Component {
                 <span className="card-text">
                   <div id="q-question" dangerouslySetInnerHTML={{ __html: data["questionQuestion"] }}>
                   </div>
+                  <div className="input-group">
+                    <div className="form-floating">
+                      <textarea className="form-control" placeholder="Question Answer" defaultValue={data["questionQuestion"]} id="txtQuestion"></textarea>
+                      <label htmlFor="txtQuestion">Question Answer</label>
+                    </div>
+                    <button className="btn btn-outline-success" type="button" onClick={() => this.save("question")}><i
+                      className="fa-solid fa-cloud-arrow-up"></i> Save</button>
+                  </div>
+                  <hr className="border border-danger border-2 opacity-50"></hr>
+
+
                   <span id="q-question-img">
                   </span>
+                  <div className="input-group">
+                    <div className="form-floating">
+                      <input type="text" className="form-control" id="txtQuestionImage" placeholder="Change Correct Answer" defaultValue={data["questionImage"]} />
+                      <label htmlFor="txtQuestionImage">Question Image Base64</label>
+                    </div>
+                    <button className="btn btn-outline-success" type="button" onClick={() => this.save("questionImage")}><i
+                      className="fa-solid fa-cloud-arrow-up"></i> Save</button>
+                  </div>
+                  <hr className="border border-danger border-2 opacity-50"></hr>
 
                   <div className="my-3" id="q-answer">
                     {data["questionAnswer"] && data["questionAnswer"].length > 0 ? data["questionAnswer"].map((answer, index) => {
@@ -296,7 +242,7 @@ class StudyContainer extends Component {
                         return (
                           <div
                             key={`answer-${index}`}
-                            className={`choose-item ms-3 my-2 ${isCorrect ? 'correct-choice' : ''}`}
+                            className={`choose-item ms-3 my-2 ${isCorrect ? 'correct-choice-show' : ''}`}
                           >
                             {data["questionCorrect"].length > 1 ? (
                               // Use checkboxes for multiple correct answer
@@ -305,7 +251,7 @@ class StudyContainer extends Component {
                                   type="checkbox"
                                   name="answer"
                                   id={`answer-${optionLetter}`}
-                                  className={isCorrect ? 'correct-choice' : ''}
+                                  className={isCorrect ? 'correct-choice-show' : ''}
                                 />
                                 <label className="" htmlFor={`answer-${optionLetter}`}>
                                   {answer}
@@ -327,16 +273,20 @@ class StudyContainer extends Component {
                     }) : (
                       <></>
                     )}
+                    <div className="input-group">
+                      <div className="form-floating">
+                        <textarea className="form-control" placeholder="Answer" defaultValue={data["questionAnswerOrg"]} id="txtAnswer"></textarea>
+                        <label htmlFor="txtAnswer">Answer</label>
+                      </div>
+                      <button className="btn btn-outline-success" type="button" onClick={() => this.save("answer")}><i
+                        className="fa-solid fa-cloud-arrow-up"></i> Save</button>
+                    </div>
                   </div>
-
-
+                  <hr className="border border-danger border-2 opacity-50"></hr>
                 </span>
 
-                <button className="btn btn-primary reveal-solution d-print-none my-3" type="button" onClick={this.toggleSolution}><i
-                  className="fa-regular fa-message"></i> Solution</button>
-
                 <span className="card-text question-answer bg-light white-text p-2 mb-3" id="solution-card"
-                  style={{ display: 'none' }}>
+                  style={{ display: 'block' }}>
                   <strong>
                     <div className="correct-answer-box d-flex">Correct Answer:&nbsp;
                       <div className="correct-answer d-flex" id="q-correct">
@@ -344,11 +294,39 @@ class StudyContainer extends Component {
                       </div>
                     </div>
                   </strong>
+                  <div className="input-group">
+                    <div className="form-floating">
+                      <input type="text" className="form-control" id="txtCorrect" placeholder="Change Correct Answer" defaultValue={data["questionCorrect"]} />
+                      <label htmlFor="txtCorrect">Correct Answer</label>
+                    </div>
+                    <button className="btn btn-outline-success" type="button" onClick={() => this.save("correct")}><i
+                      className="fa-solid fa-cloud-arrow-up"></i> Save</button>
+                  </div>
+                  <hr className="border border-danger border-2 opacity-50"></hr>
+
                   <span id="q-correct-img">
                   </span>
+                  <div className="input-group">
+                    <div className="form-floating">
+                      <input type="text" className="form-control" id="txtCorrectImage" placeholder="Change Correct Answer" defaultValue={data["questionCorrectImage"]} />
+                      <label htmlFor="txtCorrectImage">Correct Image Base64</label>
+                    </div>
+                    <button className="btn btn-outline-success" type="button" onClick={() => this.save("correctImage")}><i
+                      className="fa-solid fa-cloud-arrow-up"></i> Save</button>
+                  </div>
+                  <hr className="border border-danger border-2 opacity-50"></hr>
+
                   <br />
                   <div className="answer-note fst-italic" id="q-note"
                     dangerouslySetInnerHTML={{ __html: data["questionNote"] }}>
+                  </div>
+                  <div className="input-group">
+                    <div className="form-floating">
+                      <textarea className="form-control" placeholder="Question Note" defaultValue={data["questionNote"]} id="txtNote"></textarea>
+                      <label htmlFor="txtNote">Question Note</label>
+                    </div>
+                    <button className="btn btn-outline-success" type="button" onClick={() => this.save("note")}><i
+                      className="fa-solid fa-cloud-arrow-up"></i> Save</button>
                   </div>
                 </span>
               </div>
@@ -358,14 +336,6 @@ class StudyContainer extends Component {
 
 
           <footer className="fixed-bottom p-1 bg-light">
-            <div className="d-flex float-start">
-              <button className="btn btn-warning mx-1" type="button" onClick={this.backQuestion}><i
-                className="fa-solid fa-arrow-rotate-left"></i> Back</button>
-              <button className="btn btn-success mx-1" type="button" onClick={() => this.randomQuestion(0)}>
-                <i className="fa-solid fa-shuffle"></i> Random
-              </button>
-            </div>
-
             <div className="d-flex float-end">
               <button className="btn btn-primary mx-1" type="button" onClick={this.previousQuestion}><i
                 className="fa-solid fa-backward-step"></i> Previous</button>
@@ -385,16 +355,6 @@ class StudyContainer extends Component {
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.hideModal}></button>
               </div>
               <div className="modal-body">
-                <div className="input-group mb-2 px-1">
-                  <div className="mt-2 me-2">
-                    <button className="btn btn-lg btn-outline-secondary me-2" type="button" onClick={this.toggleDarkMode}><i
-                      className="fa-solid fa-circle-half-stroke"></i></button>
-                    <button className="btn btn-lg btn-outline-secondary me-2" type="button" onClick={this.decreaseFontSize}><i
-                      className="fas fa-search-minus"></i></button>
-                    <button className="btn btn-lg btn-outline-secondary me-2" type="button" onClick={this.increaseFontSize}><i
-                      className="fas fa-search-plus"></i></button>
-                  </div>
-                </div>
 
                 <div className="btn-group mt-2 me-2" role="group">
                   {data["sources"] && data["sources"].length > 0 ? data["sources"].map((source, i) => (
@@ -420,4 +380,4 @@ class StudyContainer extends Component {
   }
 }
 
-export default StudyContainer;
+export default EditContainer;

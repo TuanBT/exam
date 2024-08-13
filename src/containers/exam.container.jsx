@@ -104,7 +104,7 @@ class TestContainer extends Component {
   }
 
   retrieveQuestion = (questionNumberIn) => {
-    get(ref(this.db, '/subject/' + this.source + '/questions/' + questionNumberIn)).then((snapshot) => {
+    onValue(ref(this.db, '/subject/' + this.source + '/questions/' + questionNumberIn), (snapshot) => {
       const questionData = snapshot.val();
       if (questionData) {
         this.information["subject"] = this.textHeader;

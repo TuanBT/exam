@@ -9,6 +9,7 @@ import HomeContainer from './containers/home.container';
 import StudyContainer from './containers/study.container';
 import ExamContainer from './containers/exam.container';
 import ReviewContainer from './containers/review.container';
+import EditContainer from './containers/edit.container';
 
 const root = createRoot(document.getElementById("root"));
 root.render(
@@ -19,6 +20,7 @@ root.render(
       <Route path="/study" exact component={StudyContainer} />
       <Route path="/exam" exact component={ExamContainer} />
       <Route path="/review" exact component={ReviewContainer} />
+      <Route path="/edit" exact component={EditContainer} />
     </div>
   </HashRouter>
 );

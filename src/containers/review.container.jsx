@@ -215,6 +215,7 @@ class ReviewContainer extends Component {
             <div className="row py-lg-5">
               <div className="col-lg-6 col-md-8 mx-auto">
                 <p>
+                  <NavLink to="/"><button className="btn btn-success btn-lg px-4 me-3 sm-3" type="button"><i className="fas fa-home"></i></button></NavLink>
                   <NavLink to="/study"><button className="btn btn-primary btn-lg px-4 me-3 sm-3" type="button"><i className="fab fa-leanpub"></i> Study</button></NavLink>
                   <NavLink to="/exam"><button className="btn btn-outline-secondary btn-lg px-4" type="button"><i className="fas fa-graduation-cap"></i> Exam</button></NavLink>
                 </p>
