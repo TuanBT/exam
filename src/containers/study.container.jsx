@@ -245,9 +245,8 @@ class StudyContainer extends Component {
         <div className="">
 
           <div className="d-grid gap-0 d-sm-flex justify-content-sm-center">
-            <NavLink to="/"><button className="btn btn-success ms-2 mt-2" type="button"><i className="fas fa-home"></i></button></NavLink>
-
             <div className="input-group p-2">
+            <NavLink to="/"><button className="btn btn-success me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
               <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
                 <i className="fas fa-cog"></i>
               </button>

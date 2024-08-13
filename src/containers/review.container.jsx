@@ -93,7 +93,7 @@ class ReviewContainer extends Component {
               <i className="fas fa-check-square"></i> {data["numRightQuestion"]}/{data["totalQuestion"]} ({data["rightRatio"]})
             </div>
             <div>
-              <i className="fas fa-history"></i> {data["timeSpend"]}
+              <i className="fas fa-history"></i> Time Spend: {data["timeSpend"]}
             </div>
           </nav>
         </header>
@@ -199,15 +199,23 @@ class ReviewContainer extends Component {
             </div>
           </React.Fragment>
         )) : (
-          <div></div>
+          <div><section className="pt-5 text-center container">
+            <div className="row py-lg-5">
+              <div className="col-lg-6 col-md-8 mx-auto">
+                <p className="fs-1">
+                  <i className="fa-solid fa-spinner fa-spin-pulse"></i>
+                </p>
+              </div>
+            </div>
+          </section></div>
         )}
 
         <div>
-          <section className="py-5 text-center container">
+          <section className="py-0 text-center container">
             <div className="row py-lg-5">
               <div className="col-lg-6 col-md-8 mx-auto">
                 <p>
-                  <NavLink to="/study"><button className="btn btn-primary btn-lg px-4 me-sm-3" type="button"><i className="fab fa-leanpub"></i> Study</button></NavLink>
+                  <NavLink to="/study"><button className="btn btn-primary btn-lg px-4 me-3 sm-3" type="button"><i className="fab fa-leanpub"></i> Study</button></NavLink>
                   <NavLink to="/exam"><button className="btn btn-outline-secondary btn-lg px-4" type="button"><i className="fas fa-graduation-cap"></i> Exam</button></NavLink>
                 </p>
               </div>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import Firebase from '../firebase.js';
+import { Route, NavLink, HashRouter } from "react-router-dom";
 import { ref, set, get, update, remove, child, onValue } from "firebase/database";
 
 
@@ -87,14 +88,19 @@ class TestContainer extends Component {
   }
 
   loadExam(){
-    this.examSaveInfo = JSON.parse(localStorage.getItem("exam_test"));
-    this.curIdxOfArrQuestion = this.examSaveInfo["curIdxOfArrQuestion"];
-    // this.curIdxOfArrQuestion = 0;
-    this.retrieveQuestion(this.examSaveInfo["option"][this.curIdxOfArrQuestion]["questionIndex"]);
-    this.timer = this.examSaveInfo["option"].length * 76 - this.examSaveInfo["timeSpend"];
-    this.startCountdown();
-
-    this.showModal();
+    let examSaveInfoTemp = JSON.parse(localStorage.getItem("exam_test"));
+    if(examSaveInfoTemp){
+      this.examSaveInfo = examSaveInfoTemp;
+      this.curIdxOfArrQuestion = this.examSaveInfo["curIdxOfArrQuestion"];
+      this.totalQuestion = this.examSaveInfo["option"].length;
+      this.retrieveQuestion(this.examSaveInfo["option"][this.curIdxOfArrQuestion]["questionIndex"]);
+      this.timer = this.examSaveInfo["option"].length * 76 - this.examSaveInfo["timeSpend"];
+      this.startCountdown();
+      this.showModal();
+    }else{
+      this.showModal();
+      this.restartExam();
+    }
   }
 
   retrieveQuestion = (questionNumberIn) => {
@@ -109,6 +115,7 @@ class TestContainer extends Component {
         this.information["questionCorrect"] = questionData.correct;
         this.information["chooseAnswer"] = this.examSaveInfo["option"][this.curIdxOfArrQuestion]["chooseAnswer"];
         this.information["totalQuestion"] = this.totalQuestion;
+        this.information["curIdxOfArrQuestion"] = this.curIdxOfArrQuestion + 1;
       } else {
         document.getElementById('questionDetails').innerHTML = '<p>No question found with the given number.</p>';
       }
@@ -167,25 +174,33 @@ class TestContainer extends Component {
     if (this.curIdxOfArrQuestion < 0) {
       this.curIdxOfArrQuestion = 0;
     }
+
+    this.examSaveInfo["timeSpend"] = this.totalQuestion * 76 - this.timer;
+    this.examSaveInfo["curIdxOfArrQuestion"] = this.curIdxOfArrQuestion;
+    localStorage.setItem("exam_test", JSON.stringify(this.examSaveInfo));
+
     this.retrieveQuestion(this.examSaveInfo["option"][this.curIdxOfArrQuestion]["questionIndex"]);
-    this.information["curIdxOfArrQuestion"] = this.curIdxOfArrQuestion + 1;
   }
 
   nextQuestion = () => {
     this.information["questionAnswer"] = "";
     this.setState({ data: this.information });
-
-    this.examSaveInfo["timeSpend"] = this.totalQuestion * 76 - this.timer;
+    
     this.curIdxOfArrQuestion++;
     if (this.curIdxOfArrQuestion >= this.totalQuestion) {
       this.curIdxOfArrQuestion = this.totalQuestion - 1;
     }
+
+    this.examSaveInfo["timeSpend"] = this.totalQuestion * 76 - this.timer;
+    this.examSaveInfo["curIdxOfArrQuestion"] = this.curIdxOfArrQuestion;
+    localStorage.setItem("exam_test", JSON.stringify(this.examSaveInfo));
+
     this.retrieveQuestion(this.examSaveInfo["option"][this.curIdxOfArrQuestion]["questionIndex"]);
-    this.information["curIdxOfArrQuestion"] = this.curIdxOfArrQuestion + 1;
   }
 
   endExam = () => {
     this.examSaveInfo["timeSpend"] = this.totalQuestion * 76 - this.timer;
+    this.examSaveInfo["curIdxOfArrQuestion"] = this.curIdxOfArrQuestion;
     localStorage.setItem("exam_test", JSON.stringify(this.examSaveInfo));
     window.location.href = '/#/review';
   }
@@ -231,7 +246,6 @@ class TestContainer extends Component {
     var inputQuanlityQuestion = document.getElementById('inputQuanlityQuestion');
     if (inputQuanlityQuestion.value !== '') {
       this.totalQuestion = parseInt(inputQuanlityQuestion.value);
-      inputQuanlityQuestion.value = '';
       this.hideModal();
       this.restartExam();
     }
@@ -247,7 +261,6 @@ class TestContainer extends Component {
       this.textHeader = "PMP - Study Hall";
       this.numberOfQuestion = 875;
     }
-    this.retrieveQuestion(0);
   }
 
   handleCheckboxChange() {
@@ -289,8 +302,10 @@ class TestContainer extends Component {
 
               <div className="card-top card-background text-white">
                 <div className="card-subject ps-3">
+                  <NavLink to="/"><button className="btn btn-sm btn-outline-light me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
+
                   <span className="question-title-topic" id="q-subject">
-                    {data["subject"]} #{data["questionNumber"]}
+                    {data["subject"]}
                   </span>
 
                 </div>
@@ -300,7 +315,8 @@ class TestContainer extends Component {
                     </span>
                   </div>
                   <div className="card-question">
-                    <span className=""></span><i className="fas fa-book"></i> <span alt="q-number">{data["curIdxOfArrQuestion"]}/{data["totalQuestion"]}</span>
+                    <span className="me-3">#{data["questionNumber"]}</span>
+                    <i className="fas fa-book"></i> <span alt="q-number">{data["curIdxOfArrQuestion"]}/{data["totalQuestion"]}</span>
                   </div>
 
                 </div>
@@ -381,9 +397,15 @@ class TestContainer extends Component {
             </div>
 
             <div className="d-flex float-end">
-              <button className="btn btn-outline-light mx-1" type="button" onClick={this.previousQuestion}><i
-                className="fa-solid fa-backward-step"></i> Previous</button>
-              <button className="btn btn-outline-light mx-1" type="button" onClick={this.nextQuestion}>
+              <button className="btn btn-outline-light mx-1" 
+              type="button" 
+              onClick={this.previousQuestion}
+              disabled={data["curIdxOfArrQuestion"] === 1}>
+                <i className="fa-solid fa-backward-step"></i> Previous</button>
+              <button className="btn btn-outline-light mx-1" 
+              type="button" 
+              onClick={this.nextQuestion}
+              disabled={data["curIdxOfArrQuestion"] === data["totalQuestion"]}>
                 Next <i className="fa-solid fa-forward-step"></i>
               </button>
             </div>
