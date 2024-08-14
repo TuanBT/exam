@@ -79,6 +79,11 @@ class StudyContainer extends Component {
         document.getElementById('questionDetails').innerHTML = '<p>No question found with the given number.</p>';
       }
       this.setState({ data: this.information });
+
+      var inputAnswer = document.querySelectorAll("input[name=answer]");
+      for (var i = 0; i < inputAnswer.length; i++) {
+        inputAnswer[i].checked = false;
+      }
     })
   }
 
@@ -138,37 +143,22 @@ class StudyContainer extends Component {
   }
 
   randomQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     this.retrieveQuestion(0);
   }
 
   backQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     this.retrieveQuestion(this.preQuestion);
   }
 
   previousQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     this.retrieveQuestion(this.lastQuestion - 1);
   }
 
   nextQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     this.retrieveQuestion(this.lastQuestion + 1);
   }
 
   gotoQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     var inputQuestionNumber = document.getElementById('inputQuestionNumber');
     if (inputQuestionNumber.value !== '') {
       this.retrieveQuestion(parseInt(inputQuestionNumber.value));

@@ -70,7 +70,7 @@ class TestContainer extends Component {
     this.loadExam();
   }
 
-  restartExam(){
+  restartExam() {
     this.arrayQuestions = this.generateRandomArray(this.numberOfQuestion, this.totalQuestion);
     this.examSaveInfo["option"] = [];
     for (let i = 0; i < this.arrayQuestions.length; i++) {
@@ -87,9 +87,9 @@ class TestContainer extends Component {
     this.startCountdown();
   }
 
-  loadExam(){
+  loadExam() {
     let examSaveInfoTemp = JSON.parse(localStorage.getItem("exam_test"));
-    if(examSaveInfoTemp){
+    if (examSaveInfoTemp) {
       this.examSaveInfo = examSaveInfoTemp;
       this.curIdxOfArrQuestion = this.examSaveInfo["curIdxOfArrQuestion"];
       this.totalQuestion = this.examSaveInfo["option"].length;
@@ -97,7 +97,7 @@ class TestContainer extends Component {
       this.timer = this.examSaveInfo["option"].length * 76 - this.examSaveInfo["timeSpend"];
       this.startCountdown();
       this.showModal();
-    }else{
+    } else {
       this.showModal();
       this.restartExam();
     }
@@ -147,7 +147,7 @@ class TestContainer extends Component {
     const countdownElement = document.getElementById('countdown');
 
     clearInterval(this.countdownInterval);
-    
+
     countdownElement.textContent = this.convertTimeToString(this.timer);
   }
 
@@ -167,9 +167,6 @@ class TestContainer extends Component {
 
 
   previousQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     this.curIdxOfArrQuestion--;
     if (this.curIdxOfArrQuestion < 0) {
       this.curIdxOfArrQuestion = 0;
@@ -180,12 +177,21 @@ class TestContainer extends Component {
     localStorage.setItem("exam_test", JSON.stringify(this.examSaveInfo));
 
     this.retrieveQuestion(this.examSaveInfo["option"][this.curIdxOfArrQuestion]["questionIndex"]);
+
+    var inputAnswer = document.querySelectorAll("input[name=answer]");
+    for (var i = 0; i < inputAnswer.length; i++) {
+      inputAnswer[i].checked = false;
+    }
+
+    if (this.examSaveInfo["option"][this.curIdxOfArrQuestion]["chooseAnswer"]) {
+      const choices = this.examSaveInfo["option"][this.curIdxOfArrQuestion]["chooseAnswer"].split('');
+      choices.forEach(choice => {
+        document.querySelector(`#answer-${choice}`).checked = true;
+      });
+    }
   }
 
   nextQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-    
     this.curIdxOfArrQuestion++;
     if (this.curIdxOfArrQuestion >= this.totalQuestion) {
       this.curIdxOfArrQuestion = this.totalQuestion - 1;
@@ -196,6 +202,18 @@ class TestContainer extends Component {
     localStorage.setItem("exam_test", JSON.stringify(this.examSaveInfo));
 
     this.retrieveQuestion(this.examSaveInfo["option"][this.curIdxOfArrQuestion]["questionIndex"]);
+
+    var inputAnswer = document.querySelectorAll("input[name=answer]");
+    for (var i = 0; i < inputAnswer.length; i++) {
+      inputAnswer[i].checked = false;
+    }
+
+    if (this.examSaveInfo["option"][this.curIdxOfArrQuestion]["chooseAnswer"]) {
+      const choices = this.examSaveInfo["option"][this.curIdxOfArrQuestion]["chooseAnswer"].split('');
+      choices.forEach(choice => {
+        document.querySelector(`#answer-${choice}`).checked = true;
+      });
+    }
   }
 
   endExam = () => {
@@ -397,15 +415,15 @@ class TestContainer extends Component {
             </div>
 
             <div className="d-flex float-end">
-              <button className="btn btn-outline-light mx-1" 
-              type="button" 
-              onClick={this.previousQuestion}
-              disabled={data["curIdxOfArrQuestion"] === 1}>
+              <button className="btn btn-outline-light mx-1"
+                type="button"
+                onClick={this.previousQuestion}
+                disabled={data["curIdxOfArrQuestion"] === 1}>
                 <i className="fa-solid fa-backward-step"></i> Previous</button>
-              <button className="btn btn-outline-light mx-1" 
-              type="button" 
-              onClick={this.nextQuestion}
-              disabled={data["curIdxOfArrQuestion"] === data["totalQuestion"]}>
+              <button className="btn btn-outline-light mx-1"
+                type="button"
+                onClick={this.nextQuestion}
+                disabled={data["curIdxOfArrQuestion"] === data["totalQuestion"]}>
                 Next <i className="fa-solid fa-forward-step"></i>
               </button>
             </div>

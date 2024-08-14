@@ -132,10 +132,8 @@ body.dark-mode {
 }
 
 .choose-item {
-    /* display: inline-block; */
     position: relative;
     padding: 0 6px;
-    /* margin: 10px 0 0; */
 }
 
 .choose-item input[type='checkbox'] {

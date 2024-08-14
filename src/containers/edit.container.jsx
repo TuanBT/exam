@@ -170,26 +170,12 @@ class EditContainer extends Component {
     const { data } = this.state;
     return (
       <div>
-        <div className="">
+        <div className="bg-secondary pt-3">
 
-          <div className="d-grid gap-0 d-sm-flex justify-content-sm-center">
-            <div className="input-group p-2">
-              <NavLink to="/"><button className="btn btn-success me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
-              <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
-                <i className="fas fa-cog"></i>
-              </button>
-              <input type="number" className="form-control text-end" placeholder="" aria-label="" id="inputQuestionNumber" onKeyUp={this.handleKeyUp} />
-              <button className="btn btn-primary" type="button" onClick={this.gotoQuestion}><i
-                className="fa-solid fa-arrows-turn-to-dots"></i> Goto</button>
-            </div>
-          </div>
-
-
-
-          <div className="container-fluid pb-5 px-0">
+          <div className="container-fluid pb-3 pt-5">
             <div className="card bg-light">
 
-              <div className="card-top card-background rounded-top text-white">
+              <div className="card-top bg-danger rounded text-white">
                 <div className="card-subject ps-3">
                   <span className="question-title-topic" id="q-subject">
                     {data["subject"]}
@@ -206,6 +192,20 @@ class EditContainer extends Component {
                 </div>
               </div>
 
+            </div>
+          </div>
+
+          <div className="container-fluid pb-3 px-2">
+            <div className="card bg-light">
+
+              <div className="card-top bg-warning rounded-top text-white">
+                <div className="card-subject ps-3">
+                  <span className="question-title-topic" id="q-subject">
+                    Question
+                  </span>
+                </div>
+              </div>
+
               <div className="card-body question-body p-3">
                 <span className="card-text">
                   <div id="q-question" dangerouslySetInnerHTML={{ __html: data["questionQuestion"] }}>
@@ -213,25 +213,55 @@ class EditContainer extends Component {
                   <div className="input-group">
                     <div className="form-floating">
                       <textarea className="form-control" placeholder="Question Answer" defaultValue={data["questionQuestion"]} id="txtQuestion"></textarea>
-                      <label htmlFor="txtQuestion">Question Answer</label>
+                      <label htmlFor="txtQuestion">Question</label>
                     </div>
                     <button className="btn btn-outline-success" type="button" onClick={() => this.save("question")}><i
                       className="fa-solid fa-cloud-arrow-up"></i> Save</button>
                   </div>
-                  <hr className="border border-danger border-2 opacity-50"></hr>
+                </span>
+              </div>
+            </div>
+          </div>
 
+          <div className="container-fluid pb-3 px-2">
+            <div className="card bg-light">
+              <div className="card-top bg-warning rounded-top text-white">
+                <div className="card-subject ps-3">
+                  <span className="question-title-topic" id="q-subject">
+                    Question Image
+                  </span>
+                </div>
+              </div>
+              <div className="card-body question-body p-3">
+                <span className="card-text">
 
                   <span id="q-question-img">
                   </span>
                   <div className="input-group">
                     <div className="form-floating">
                       <input type="text" className="form-control" id="txtQuestionImage" placeholder="Change Correct Answer" defaultValue={data["questionImage"]} />
-                      <label htmlFor="txtQuestionImage">Question Image Base64</label>
+                      <label htmlFor="txtQuestionImage">Image Base64</label>
                     </div>
                     <button className="btn btn-outline-success" type="button" onClick={() => this.save("questionImage")}><i
                       className="fa-solid fa-cloud-arrow-up"></i> Save</button>
                   </div>
-                  <hr className="border border-danger border-2 opacity-50"></hr>
+                </span>
+
+              </div>
+            </div>
+          </div>
+
+          <div className="container-fluid pb-3 px-2">
+            <div className="card bg-light">
+              <div className="card-top bg-warning rounded-top text-white">
+                <div className="card-subject ps-3">
+                  <span className="question-title-topic" id="q-subject">
+                    Answer
+                  </span>
+                </div>
+              </div>
+              <div className="card-body question-body p-3">
+                <span className="card-text">
 
                   <div className="my-3" id="q-answer">
                     {data["questionAnswer"] && data["questionAnswer"].length > 0 ? data["questionAnswer"].map((answer, index) => {
@@ -282,11 +312,24 @@ class EditContainer extends Component {
                         className="fa-solid fa-cloud-arrow-up"></i> Save</button>
                     </div>
                   </div>
-                  <hr className="border border-danger border-2 opacity-50"></hr>
-                </span>
 
-                <span className="card-text question-answer bg-light white-text p-2 mb-3" id="solution-card"
-                  style={{ display: 'block' }}>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="container-fluid pb-3 px-2">
+            <div className="card bg-light">
+              <div className="card-top bg-warning rounded-top text-white">
+                <div className="card-subject ps-3">
+                  <span className="question-title-topic" id="q-subject">
+                    Correct Answer
+                  </span>
+                </div>
+              </div>
+              <div className="card-body question-body p-3">
+                <span className="card-text">
+
                   <strong>
                     <div className="correct-answer-box d-flex">Correct Answer:&nbsp;
                       <div className="correct-answer d-flex" id="q-correct">
@@ -302,21 +345,52 @@ class EditContainer extends Component {
                     <button className="btn btn-outline-success" type="button" onClick={() => this.save("correct")}><i
                       className="fa-solid fa-cloud-arrow-up"></i> Save</button>
                   </div>
-                  <hr className="border border-danger border-2 opacity-50"></hr>
+
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="container-fluid pb-3 px-2">
+            <div className="card bg-light">
+              <div className="card-top bg-warning rounded-top text-white">
+                <div className="card-subject ps-3">
+                  <span className="question-title-topic" id="q-subject">
+                    Correct Image
+                  </span>
+                </div>
+              </div>
+              <div className="card-body question-body p-3">
+                <span className="card-text">
 
                   <span id="q-correct-img">
                   </span>
                   <div className="input-group">
                     <div className="form-floating">
                       <input type="text" className="form-control" id="txtCorrectImage" placeholder="Change Correct Answer" defaultValue={data["questionCorrectImage"]} />
-                      <label htmlFor="txtCorrectImage">Correct Image Base64</label>
+                      <label htmlFor="txtCorrectImage">Image Base64</label>
                     </div>
                     <button className="btn btn-outline-success" type="button" onClick={() => this.save("correctImage")}><i
                       className="fa-solid fa-cloud-arrow-up"></i> Save</button>
                   </div>
-                  <hr className="border border-danger border-2 opacity-50"></hr>
 
-                  <br />
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="container-fluid pb-3 px-2">
+            <div className="card bg-light">
+              <div className="card-top bg-warning rounded-top text-white">
+                <div className="card-subject ps-3">
+                  <span className="question-title-topic" id="q-subject">
+                    Note
+                  </span>
+                </div>
+              </div>
+              <div className="card-body question-body p-3">
+                <span className="card-text">
+
                   <div className="answer-note fst-italic" id="q-note"
                     dangerouslySetInnerHTML={{ __html: data["questionNote"] }}>
                   </div>
@@ -328,22 +402,30 @@ class EditContainer extends Component {
                     <button className="btn btn-outline-success" type="button" onClick={() => this.save("note")}><i
                       className="fa-solid fa-cloud-arrow-up"></i> Save</button>
                   </div>
+
                 </span>
               </div>
             </div>
           </div>
 
-
-
-          <footer className="fixed-bottom p-1 bg-light">
-            <div className="d-flex float-end">
-              <button className="btn btn-primary mx-1" type="button" onClick={this.previousQuestion}><i
-                className="fa-solid fa-backward-step"></i> Previous</button>
-              <button className="btn btn-primary mx-1" type="button" onClick={this.nextQuestion}>
-                Next <i className="fa-solid fa-forward-step"></i>
+          <div className="fixed-top p-0 bg-primary">
+            <div className="input-group p-2">
+              <NavLink to="/"><button className="btn btn-outline-light me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
+              <button type="button" className="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
+                <i className="fas fa-cog"></i>
               </button>
+              <input type="number" className="form-control text-end" placeholder="" aria-label="" id="inputQuestionNumber" onKeyUp={this.handleKeyUp} />
+              <button className="btn btn-outline-light" type="button" onClick={this.gotoQuestion}><i
+                className="fa-solid fa-arrows-turn-to-dots"></i> Goto</button>
+              <div className="d-flex float-end">
+                <button className="btn btn-outline-light mx-1" type="button" onClick={this.previousQuestion}><i
+                  className="fa-solid fa-backward-step"></i> Previous</button>
+                <button className="btn btn-outline-light mx-1" type="button" onClick={this.nextQuestion}>
+                  Next <i className="fa-solid fa-forward-step"></i>
+                </button>
+              </div>
             </div>
-          </footer>
+          </div>
 
         </div>
 
