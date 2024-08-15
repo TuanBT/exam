@@ -71,19 +71,17 @@ class EditContainer extends Component {
         this.information["questionCorrectImage"] = questionData.correctImage;
         this.information["questionNote"] = questionData.note;
 
+        document.getElementById("txtQuestion").value = questionData.question;
+        document.getElementById("txtQuestionImage").value = questionData.questionImage;
+        document.getElementById("txtAnswer").value = questionData.answer;
+        document.getElementById("txtCorrect").value = questionData.correct;
+        document.getElementById("txtCorrectImage").value = questionData.correctImage;
+        document.getElementById("txtNote").value = questionData.note;
       } else {
         document.getElementById('questionDetails').innerHTML = '<p>No question found with the given number.</p>';
       }
       this.setState({ data: this.information });
     })
-  }
-
-  previousQuestion = () => {
-    this.retrieveQuestion(this.lastQuestion - 1);
-  }
-
-  nextQuestion = () => {
-    this.retrieveQuestion(this.lastQuestion + 1);
   }
 
   gotoQuestion = () => {
