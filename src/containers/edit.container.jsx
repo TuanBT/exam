@@ -79,23 +79,14 @@ class EditContainer extends Component {
   }
 
   previousQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     this.retrieveQuestion(this.lastQuestion - 1);
   }
 
   nextQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     this.retrieveQuestion(this.lastQuestion + 1);
   }
 
   gotoQuestion = () => {
-    this.information["questionAnswer"] = "";
-    this.setState({ data: this.information });
-
     var inputQuestionNumber = document.getElementById('inputQuestionNumber');
     if (inputQuestionNumber.value !== '') {
       this.retrieveQuestion(parseInt(inputQuestionNumber.value));
@@ -172,6 +163,19 @@ class EditContainer extends Component {
       <div>
         <div className="bg-secondary pt-3">
 
+        <div className="fixed-top p-0 bg-primary">
+            <div className="input-group p-2">
+              <NavLink to="/"><button className="btn btn-outline-light me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
+              <button type="button" className="btn btn-outline-light rounded-start" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
+                <i className="fas fa-cog"></i>
+              </button>
+              <input type="number" className="form-control text-end" placeholder="" aria-label="" id="inputQuestionNumber" onKeyUp={this.handleKeyUp} />
+              <button className="btn btn-outline-light rounded-end" type="button" onClick={this.gotoQuestion}><i
+                className="fa-solid fa-arrows-turn-to-dots"></i> Go</button>
+            </div>
+          </div>
+
+
           <div className="container-fluid pb-3 pt-5">
             <div className="card bg-light">
 
@@ -187,7 +191,7 @@ class EditContainer extends Component {
                     <span><i className="fa-solid fa-pen-to-square"></i> Eidt Mode</span>
                   </div>
                   <div className="card-question">
-                    <span className=""></span><i className="fas fa-book"></i> <span id="q-number">{data["questionNumber"]}</span>
+                    #<span id="q-number">{data["questionNumber"]}</span>
                   </div>
                 </div>
               </div>
@@ -281,6 +285,7 @@ class EditContainer extends Component {
                                   type="checkbox"
                                   name="answer"
                                   id={`answer-${optionLetter}`}
+                                  disabled={true}
                                   className={isCorrect ? 'correct-choice-show' : ''}
                                 />
                                 <label className="" htmlFor={`answer-${optionLetter}`}>
@@ -290,7 +295,11 @@ class EditContainer extends Component {
                             ) : (
                               // Use radio buttons for single correct answer
                               <div>
-                                <input type="radio" name="answer" id={`answer-${optionLetter}`} />
+                                <input type="radio" 
+                                name="answer" 
+                                id={`answer-${optionLetter}`} 
+                                disabled={true}
+                                />
                                 <label className="" htmlFor={`answer-${optionLetter}`}>
                                   {answer}
                                 </label>
@@ -408,25 +417,7 @@ class EditContainer extends Component {
             </div>
           </div>
 
-          <div className="fixed-top p-0 bg-primary">
-            <div className="input-group p-2">
-              <NavLink to="/"><button className="btn btn-outline-light me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
-              <button type="button" className="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
-                <i className="fas fa-cog"></i>
-              </button>
-              <input type="number" className="form-control text-end" placeholder="" aria-label="" id="inputQuestionNumber" onKeyUp={this.handleKeyUp} />
-              <button className="btn btn-outline-light" type="button" onClick={this.gotoQuestion}><i
-                className="fa-solid fa-arrows-turn-to-dots"></i> Goto</button>
-              <div className="d-flex float-end">
-                <button className="btn btn-outline-light mx-1" type="button" onClick={this.previousQuestion}><i
-                  className="fa-solid fa-backward-step"></i> Previous</button>
-                <button className="btn btn-outline-light mx-1" type="button" onClick={this.nextQuestion}>
-                  Next <i className="fa-solid fa-forward-step"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
+          
         </div>
 
         <div className="modal" id="modal" tabIndex="-1">

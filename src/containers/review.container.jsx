@@ -23,6 +23,7 @@ class ReviewContainer extends Component {
       "questionResultArray": []
     };
     this.examSaveInfo = {};
+    this.currentMode = 0; // 0 = normal, 1 = dark, 2 = light
   }
 
   componentDidMount() {
@@ -78,6 +79,37 @@ class ReviewContainer extends Component {
     const remainingSeconds = Math.floor(seconds % 60);
 
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  toggleDarkMode = () => {
+    this.currentMode = (this.currentMode + 1) % 3;
+    switch (this.currentMode) {
+      case 0:
+        document.body.className = "normal-mode";
+        break;
+      case 1:
+        document.body.className = "dark-mode";
+        break;
+      case 2:
+        document.body.className = "dark-mode light-mode";
+        break;
+    }
+  }
+
+  increaseFontSize = () => {
+    var cardTextElements = document.querySelectorAll(".card-text");
+    cardTextElements.forEach(function (element) {
+      var currentSize = parseFloat(window.getComputedStyle(element).getPropertyValue('font-size'));
+      element.style.fontSize = (currentSize + 2) + "px";
+    });
+  }
+
+  decreaseFontSize = () => {
+    var cardTextElements = document.querySelectorAll(".card-text");
+    cardTextElements.forEach(function (element) {
+      var currentSize = parseFloat(window.getComputedStyle(element).getPropertyValue('font-size'));
+      element.style.fontSize = (currentSize - 2) + "px";
+    });
   }
 
   render() {
@@ -217,13 +249,24 @@ class ReviewContainer extends Component {
                 <p>
                   <NavLink to="/"><button className="btn btn-success btn-lg px-4 me-3 sm-3" type="button"><i className="fas fa-home"></i></button></NavLink>
                   <NavLink to="/study"><button className="btn btn-primary btn-lg px-4 me-3 sm-3" type="button"><i className="fab fa-leanpub"></i> Study</button></NavLink>
-                  <NavLink to="/exam"><button className="btn btn-outline-secondary btn-lg px-4" type="button"><i className="fas fa-graduation-cap"></i> Exam</button></NavLink>
+                  <NavLink to="/exam"><button className="btn btn-outline-danger btn-lg px-4" type="button"><i className="fas fa-graduation-cap"></i> Exam</button></NavLink>
                 </p>
+                  <p className="mt-3">
+                    <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.toggleDarkMode}><i
+                      className="fa-solid fa-circle-half-stroke"></i></button>
+                    <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.decreaseFontSize}><i
+                      className="fas fa-search-minus"></i></button>
+                    <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.increaseFontSize}><i
+                      className="fas fa-search-plus"></i></button>
+                  </p>
               </div>
+
+              
             </div>
           </section>
           <p className="pb-3 text-center text-muted-custom">©Tuân 2024</p>
         </div>
+
       </div>
     );
   }

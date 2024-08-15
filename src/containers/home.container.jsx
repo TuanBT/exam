@@ -29,7 +29,7 @@ class HomeContainer extends Component {
               <p className="lead text-muted">The application allows self-learning and testing to help increase confidence when taking multiple-choice exams.<br />The app currently only supports PMP exam preparation and the questions are sourced from two sources: Exam Topic and Study Hall.</p>
               <p>
                 <NavLink to="/study"><button className="btn btn-primary btn-lg px-4 me-3 sm-3" type="button"><i className="fab fa-leanpub"></i> Study</button></NavLink>
-                <NavLink to="/exam"><button className="btn btn-outline-secondary btn-lg px-4" type="button"><i className="fas fa-graduation-cap"></i> Exam</button></NavLink>
+                <NavLink to="/exam"><button className="btn btn-outline-danger btn-lg px-4" type="button"><i className="fas fa-graduation-cap"></i> Exam</button></NavLink>
               </p>
             </div>
           </div>

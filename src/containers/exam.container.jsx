@@ -468,8 +468,8 @@ class TestContainer extends Component {
 
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={this.startExam}>Start New Exam</button>
-                <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal" onClick={this.hideModal}>Close</button>
+                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={this.startExam}>Start New Exam</button>
+                <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal" onClick={this.hideModal}>Resum</button>
               </div>
             </div>
           </div>

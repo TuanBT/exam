@@ -237,12 +237,12 @@ class StudyContainer extends Component {
           <div className="d-grid gap-0 d-sm-flex justify-content-sm-center">
             <div className="input-group p-2">
             <NavLink to="/"><button className="btn btn-success me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
-              <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
+              <button type="button" className="btn btn-primary rounded-start" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
                 <i className="fas fa-cog"></i>
               </button>
               <input type="number" className="form-control text-end" placeholder="" aria-label="" id="inputQuestionNumber" onKeyUp={this.handleKeyUp} />
               <button className="btn btn-primary" type="button" onClick={this.gotoQuestion}><i
-                className="fa-solid fa-arrows-turn-to-dots"></i> Goto</button>
+                className="fa-solid fa-arrows-turn-to-dots"></i> Go</button>
             </div>
           </div>
 
