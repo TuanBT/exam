@@ -12,6 +12,7 @@ class HomeContainer extends Component {
   }
 
   componentDidMount() {
+    document.title = 'Practice Exams';
     this.main();
   }
 
@@ -25,7 +26,7 @@ class HomeContainer extends Component {
         <section className="py-5 text-center container">
           <div className="row py-lg-5">
             <div className="col-lg-6 col-md-8 mx-auto">
-              <h1 className="fw-bold">Exam Training</h1>
+              <h1 className="fw-bold">Practice Exams</h1>
               <p className="lead text-muted">The application allows self-learning and testing to help increase confidence when taking multiple-choice exams.<br />The app currently only supports PMP exam preparation and the questions are sourced from two sources: Exam Topic and Study Hall.</p>
               <p>
                 <NavLink to="/study"><button className="btn btn-primary btn-lg px-4 me-3 sm-3" type="button"><i className="fab fa-leanpub"></i> Study</button></NavLink>

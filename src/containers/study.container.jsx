@@ -34,7 +34,7 @@ class StudyContainer extends Component {
   }
 
   componentDidMount() {
-    document.title = 'Study';
+    document.title = 'Exam Question Study';
     this.main();
   }
 
@@ -71,7 +71,6 @@ class StudyContainer extends Component {
         document.getElementById('q-correct-img').innerHTML = "<img src='" + questionData.correctImage + "'>";
         this.information["questionNote"] = questionData.note;
 
-
         const solutionCard = document.getElementById('solution-card');
         solutionCard.style.display = 'none';
 
@@ -84,6 +83,12 @@ class StudyContainer extends Component {
       for (var i = 0; i < inputAnswer.length; i++) {
         inputAnswer[i].checked = false;
       }
+
+      const correctChoiceShowElements = document.querySelectorAll(".correct-choice-show");
+      correctChoiceShowElements.forEach(element => {
+        element.classList.replace("correct-choice-show", "correct-choice");
+      });
+
     })
   }
 
@@ -236,7 +241,7 @@ class StudyContainer extends Component {
 
           <div className="d-grid gap-0 d-sm-flex justify-content-sm-center">
             <div className="input-group p-2">
-            <NavLink to="/"><button className="btn btn-success me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
+              <NavLink to="/"><button className="btn btn-success me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
               <button type="button" className="btn btn-primary rounded-start" data-bs-toggle="modal" data-bs-target="#modal" onClick={this.showModal}>
                 <i className="fas fa-cog"></i>
               </button>

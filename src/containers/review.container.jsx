@@ -27,7 +27,7 @@ class ReviewContainer extends Component {
   }
 
   componentDidMount() {
-    document.title = 'Review';
+    document.title = 'Exam Results Review';
     this.main();
   }
 
@@ -35,40 +35,44 @@ class ReviewContainer extends Component {
     console.log("main");
     this.examSaveInfo = JSON.parse(localStorage.getItem("exam_test"));
     if (this.examSaveInfo) {
-      get(ref(this.db, '/subject/' + this.examSaveInfo["subject"] + '/questions/')).then((snapshot) => {
-        const questionDatas = snapshot.val();
+      this.information["questionResultArray"] = [];
+      let numRightQuestion = 0;
 
-        this.information["questionResultArray"] = [];
-        let numRightQuestion = 0;
+      this.information["subject"] = this.examSaveInfo["subject"];
+      this.information["timeSpend"] = this.formatSeconds(this.examSaveInfo["timeSpend"]);
+      // this.information["totalQuestion"] = this.examSaveInfo["option"].length;
 
-        for (let i = 0; i < this.examSaveInfo["option"].length; i++) {
-          // console.log(questionDatas[this.examSaveInfo["option"][i]["questionIndex"]]["number"]);
+      for (let i = 0; i < this.examSaveInfo["option"].length; i++) {
+
+        get(ref(this.db, '/subject/' + this.examSaveInfo["subject"] + '/questions/' + this.examSaveInfo["option"][i]["questionIndex"])).then((snapshot) => {
+          const questionData = snapshot.val();
           let result = false;
-          if (this.examSaveInfo["option"][i]["chooseAnswer"] == questionDatas[this.examSaveInfo["option"][i]["questionIndex"]]["correct"]) {
+          if (this.examSaveInfo["option"][i]["chooseAnswer"] == questionData["correct"]) {
             numRightQuestion++;
             result = true;
           }
+
           let object = {
             "chooseAnswer": this.examSaveInfo["option"][i]["chooseAnswer"],
-            "questionNumber": questionDatas[this.examSaveInfo["option"][i]["questionIndex"]]["number"],
-            "questionQuestion": questionDatas[this.examSaveInfo["option"][i]["questionIndex"]]["question"],
-            "questionCorrect": questionDatas[this.examSaveInfo["option"][i]["questionIndex"]]["correct"],
-            "questionNote": questionDatas[this.examSaveInfo["option"][i]["questionIndex"]]["note"],
-            "questionAnswer": questionDatas[this.examSaveInfo["option"][i]["questionIndex"]]["answer"].split("<br/>"),
+            "questionNumber": questionData["number"],
+            "questionQuestion": questionData["question"],
+            "questionImage": questionData["questionImage"],
+            "questionAnswer": questionData["answer"].split("<br/>"),
+            "questionCorrect": questionData["correct"],
+            "correctImage": questionData["correctImage"],
+            "questionNote": questionData["note"],
             "result": result,
           }
           this.information["questionResultArray"].push(object);
-        }
+          this.information["numRightQuestion"] = numRightQuestion;
+          this.information["rightRatio"] = (numRightQuestion / this.examSaveInfo["option"].length * 100).toFixed(0) + "%";
+          this.information["totalQuestion"] = i + 1;
 
-        this.information["subject"] = this.examSaveInfo["subject"];
-        this.information["timeSpend"] = this.formatSeconds(this.examSaveInfo["timeSpend"]);
-        this.information["totalQuestion"] = this.examSaveInfo["option"].length;
-        this.information["numRightQuestion"] = numRightQuestion;
-        this.information["rightRatio"] = (numRightQuestion / this.examSaveInfo["option"].length * 100).toFixed(0) + "%";
-        // document.getElementById('q-question-img').innerHTML = "<img src='" + questionData.questionImage + "'>";
-        // document.getElementById('q-correct-img').innerHTML = "<img src='" + questionData.correctImage + "'>";
-        this.setState({ data: this.information });
-      })
+          this.setState({ data: this.information });
+        })
+
+      }
+
     } else {
       window.location.href = '/#/exam';
     }
@@ -153,6 +157,7 @@ class ReviewContainer extends Component {
                     <div alt="q-question" dangerouslySetInnerHTML={{ __html: questionResult["questionQuestion"] }}>
                     </div>
                     <span alt="q-question-img">
+                      <img src={questionResult["questionImage"]} />
                     </span>
 
                     <div className="my-3" id={`q-answer-${questionResult["questionNumber"]}`}>
@@ -219,6 +224,7 @@ class ReviewContainer extends Component {
                     </div>
 
                     <span alt="q-correct-img">
+                      <img src={questionResult["correctImage"]} />
                     </span>
                     <br />
                     <div className="answer-note fst-italic" alt="q-note"
@@ -251,17 +257,17 @@ class ReviewContainer extends Component {
                   <NavLink to="/study"><button className="btn btn-primary btn-lg px-4 me-3 sm-3" type="button"><i className="fab fa-leanpub"></i> Study</button></NavLink>
                   <NavLink to="/exam"><button className="btn btn-outline-danger btn-lg px-4" type="button"><i className="fas fa-graduation-cap"></i> Exam</button></NavLink>
                 </p>
-                  <p className="mt-3">
-                    <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.toggleDarkMode}><i
-                      className="fa-solid fa-circle-half-stroke"></i></button>
-                    <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.decreaseFontSize}><i
-                      className="fas fa-search-minus"></i></button>
-                    <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.increaseFontSize}><i
-                      className="fas fa-search-plus"></i></button>
-                  </p>
+                <p className="mt-3">
+                  <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.toggleDarkMode}><i
+                    className="fa-solid fa-circle-half-stroke"></i></button>
+                  <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.decreaseFontSize}><i
+                    className="fas fa-search-minus"></i></button>
+                  <button className="btn btn-sm btn-outline-secondary me-2" type="button" onClick={this.increaseFontSize}><i
+                    className="fas fa-search-plus"></i></button>
+                </p>
               </div>
 
-              
+
             </div>
           </section>
           <p className="pb-3 text-center text-muted-custom">©Tuân 2024</p>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
+import $, { event } from 'jquery';
 import Firebase from '../firebase.js';
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import { ref, set, get, update, remove, child, onValue } from "firebase/database";
@@ -18,6 +18,7 @@ class TestContainer extends Component {
     this.preQuestion = 0;
     this.counterQuestion = 1;
     this.totalQuestion = 10;
+    this.startQuestion = 0;
     this.curIdxOfArrQuestion = 0;
     this.trueCounter = 0;
     this.trueFalseFlag = true;
@@ -62,7 +63,7 @@ class TestContainer extends Component {
   }
 
   componentDidMount() {
-    document.title = 'Exam';
+    document.title = 'Exam Simulator';
     this.main();
   }
 
@@ -71,7 +72,12 @@ class TestContainer extends Component {
   }
 
   restartExam() {
-    this.arrayQuestions = this.generateRandomArray(this.numberOfQuestion, this.totalQuestion);
+    if(this.startQuestion > 0){
+      this.arrayQuestions = this.generateArray(this.startQuestion, this.totalQuestion);
+    }
+    else{
+      this.arrayQuestions = this.generateRandomUniqueArray(this.numberOfQuestion, this.totalQuestion);
+    }
     this.examSaveInfo["option"] = [];
     for (let i = 0; i < this.arrayQuestions.length; i++) {
       this.examSaveInfo["option"].push({
@@ -83,6 +89,8 @@ class TestContainer extends Component {
     this.curIdxOfArrQuestion = 0;
     this.examSaveInfo["curIdxOfArrQuestion"] = this.curIdxOfArrQuestion;
     this.timer = this.totalQuestion * 76; //1.26 min/question
+    this.examSaveInfo["timeSpend"] = 0;
+    localStorage.setItem("exam_test", JSON.stringify(this.examSaveInfo));
     this.retrieveQuestion(this.examSaveInfo["option"][this.curIdxOfArrQuestion]["questionIndex"]);
     this.startCountdown();
   }
@@ -123,14 +131,21 @@ class TestContainer extends Component {
     })
   }
 
-
-  generateRandomArray = (max, size) => {
-    const newArray = [];
-    for (let i = 0; i < size; i++) {
-      newArray.push(Math.floor(Math.random() * max) + 1);
-      // newArray.push(1225);
+  generateRandomUniqueArray = (max, size) => {
+    const uniqueNumbers = new Set();
+    while (uniqueNumbers.size < size) {
+      uniqueNumbers.add(Math.floor(Math.random() * max) + 1);
+      //uniqueNumbers.push(1225); //For testing
     }
-    return newArray;
+    return Array.from(uniqueNumbers);
+  }
+
+  generateArray = (start, size) => {
+    const numbers = new Set();
+    for (let i = 0; i < size; i++) {
+      numbers.add(start + i);
+    }
+    return Array.from(numbers);
   }
 
   startCountdown = () => {
@@ -261,9 +276,15 @@ class TestContainer extends Component {
     this.information["questionAnswer"] = "";
     this.setState({ data: this.information });
 
-    var inputQuanlityQuestion = document.getElementById('inputQuanlityQuestion');
+    const inputQuanlityQuestion = document.getElementById('inputQuanlityQuestion');
+    const inputStartQuestion = document.getElementById('inputStartQuestion');
     if (inputQuanlityQuestion.value !== '') {
       this.totalQuestion = parseInt(inputQuanlityQuestion.value);
+      if(inputStartQuestion.value != ''){
+        this.startQuestion = parseInt(inputStartQuestion.value);
+      }else{
+        this.startQuestion = 0;
+      }
       this.hideModal();
       this.restartExam();
     }
@@ -279,6 +300,7 @@ class TestContainer extends Component {
       this.textHeader = "PMP - Study Hall";
       this.numberOfQuestion = 875;
     }
+    document.getElementById('inputQuanlityQuestion').placeholder = '1 - ' + this.numberOfQuestion;
   }
 
   handleCheckboxChange() {
@@ -292,9 +314,46 @@ class TestContainer extends Component {
     this.examSaveInfo["option"][this.curIdxOfArrQuestion]["chooseAnswer"] = selectedOptions;
   }
 
+  handleStartKeyUp = (event) => {
+    const inputStartElement = document.getElementById('inputStartQuestion');
+    const startvalue = parseInt(inputStartElement.value);
+
+    // Check if the value is within the valid range
+    if (startvalue < 1) {
+      inputStartElement.value = '';
+    } else if (startvalue > this.numberOfQuestion) {
+      inputStartElement.value = this.numberOfQuestion;
+    }
+
+    const inputElement = document.getElementById('inputQuanlityQuestion');
+    const value = parseInt(inputElement.value);
+
+    if(value && (startvalue + value > this.numberOfQuestion + 1)){
+      inputElement.value = this.numberOfQuestion - startvalue + 1;
+    }
+  };
+
   handleKeyUp = (event) => {
     if (event.key === 'Enter') {
       this.startExam();
+    }
+
+    const inputElement = document.getElementById('inputQuanlityQuestion');
+    const value = parseInt(event.target.value);
+
+    // Check if the value is within the valid range
+    if (value < 1) {
+      inputElement.value = 1;
+    } else if (value > this.numberOfQuestion) {
+      inputElement.value = this.numberOfQuestion;
+    }
+    document.getElementById('inputQuanlityQuestion').placeholder = '1 - ' + this.numberOfQuestion;
+
+    const inputStartElement = document.getElementById('inputStartQuestion');
+    const startvalue = parseInt(inputStartElement.value);
+
+    if(startvalue && (startvalue + value > this.numberOfQuestion)){
+      inputStartElement.value = this.numberOfQuestion - value + 1;
     }
   };
 
@@ -320,7 +379,7 @@ class TestContainer extends Component {
 
               <div className="card-top card-background text-white">
                 <div className="card-subject ps-3">
-                  <NavLink to="/"><button className="btn btn-sm btn-outline-light me-2" type="button"><i className="fas fa-home"></i></button></NavLink>
+                  <NavLink to="/"><button className="btn btn-sm btn-outline-light me-2 mb-1" type="button"><i className="fas fa-home"></i></button></NavLink>
 
                   <span className="question-title-topic" id="q-subject">
                     {data["subject"]}
@@ -334,7 +393,7 @@ class TestContainer extends Component {
                   </div>
                   <div className="card-question">
                     <span className="me-3">#{data["questionNumber"]}</span>
-                    <i className="fas fa-book"></i> <span alt="q-number">{data["curIdxOfArrQuestion"]}/{data["totalQuestion"]}</span>
+                    <i className="fas fa-question-circle"></i> <span alt="q-number">{data["curIdxOfArrQuestion"]}/{data["totalQuestion"]}</span>
                   </div>
 
                 </div>
@@ -462,8 +521,11 @@ class TestContainer extends Component {
                 </div>
 
                 <div className="input-group py-3">
-                  <span className="input-group-text" id="basic-addon3">Total Question</span>
-                  <input type="number" className="form-control text-end" defaultValue={data["totalQuestion"]} aria-label="" id="inputQuanlityQuestion" onKeyUp={this.handleKeyUp} />
+                <span className="input-group-text" id="basic-addon3">From:</span>
+                  <input type="number" className="form-control text-end" placeholder='Random' aria-label="" id="inputStartQuestion" onKeyUp={(event) => this.handleStartKeyUp(event)} />
+                
+                  <span className="input-group-text" id="basic-addon3">Quanlity:</span>
+                  <input type="number" className="form-control text-end" defaultValue={data["totalQuestion"]} aria-label="" id="inputQuanlityQuestion" onKeyUp={(event) => this.handleKeyUp(event)} />
                 </div>
 
               </div>

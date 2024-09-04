@@ -37,13 +37,13 @@ class EditContainer extends Component {
   }
 
   componentDidMount() {
-    document.title = 'Edit';
+    document.title = 'Question Editor';
     this.main();
   }
 
   main() {
     console.log("main");
-    this.retrieveQuestion(0);
+    // this.retrieveQuestion(0);
 
   }
 
@@ -110,6 +110,10 @@ class EditContainer extends Component {
       this.gotoQuestion();
     }
   };
+
+  addNote = () => {
+    document.getElementById("txtNote").value = document.getElementById("txtNote").value + "AAA: XX<br/>";
+  }
 
   save = (type) => {
     switch (type) {
@@ -393,6 +397,9 @@ class EditContainer extends Component {
                   <span className="question-title-topic" id="q-subject">
                     Note
                   </span>
+                  <button type="button" className="btn btn-outline-light rounded-start mx-3 mb-1" onClick={this.addNote}>
+                    <i className="fas fa-plus-circle"></i>
+                  </button>
                 </div>
               </div>
               <div className="card-body question-body p-3">
