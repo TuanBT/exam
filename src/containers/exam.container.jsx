@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import $, { event } from 'jquery';
-import Firebase from '../firebase.js';
+import { getQuestion } from '../data.js';
 import { Route, NavLink, HashRouter } from "react-router-dom";
-import { ref, set, get, update, remove, child, onValue } from "firebase/database";
 
 
 class TestContainer extends Component {
@@ -13,7 +12,6 @@ class TestContainer extends Component {
     this.state = {
       data: {}
     };
-    this.db = Firebase();
     this.lastQuestion = 0;
     this.preQuestion = 0;
     this.counterQuestion = 1;
@@ -112,8 +110,7 @@ class TestContainer extends Component {
   }
 
   retrieveQuestion = (questionNumberIn) => {
-    onValue(ref(this.db, '/subject/' + this.source + '/questions/' + questionNumberIn), (snapshot) => {
-      const questionData = snapshot.val();
+    getQuestion(this.source, questionNumberIn).then((questionData) => {
       if (questionData) {
         this.information["subject"] = this.textHeader;
         this.information["questionNumber"] = questionData.number;

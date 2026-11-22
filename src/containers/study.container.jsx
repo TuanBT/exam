@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import Firebase from '../firebase.js';
-import { ref, set, get, update, remove, child, onValue } from "firebase/database";
+import { getQuestion } from '../data.js';
 import { Route, NavLink, HashRouter } from "react-router-dom";
 
 
@@ -13,7 +12,6 @@ class StudyContainer extends Component {
     this.state = {
       data: {}
     };
-    this.db = Firebase();
     this.lastQuestion = 0;
     this.preQuestion = 0;
     this.source = "PMP/ExamTopic"; //PMP/StudyHall
@@ -59,8 +57,7 @@ class StudyContainer extends Component {
     // Update the current question number
     this.lastQuestion = questionNumber;
 
-    onValue(ref(this.db, '/subject/' + this.source + '/questions/' + questionNumber), (snapshot) => {
-      const questionData = snapshot.val();
+    getQuestion(this.source, questionNumber).then((questionData) => {
       if (questionData) {
         this.information["subject"] = this.textHeader;
         this.information["questionNumber"] = questionData.number;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Route, NavLink, HashRouter } from "react-router-dom";
-import Firebase from '../firebase.js';
-import { ref, set, get, update, remove, child, onValue } from "firebase/database";
+import { loadQuestions } from '../data.js';
 
 
 class ReviewContainer extends Component {
@@ -11,7 +10,6 @@ class ReviewContainer extends Component {
     this.state = {
       data: {}
     };
-    this.db = Firebase();
     this.information = {
       "questionNumber": 0,
       "questionQuestion": "",
@@ -42,10 +40,9 @@ class ReviewContainer extends Component {
       this.information["timeSpend"] = this.formatSeconds(this.examSaveInfo["timeSpend"]);
       // this.information["totalQuestion"] = this.examSaveInfo["option"].length;
 
-      for (let i = 0; i < this.examSaveInfo["option"].length; i++) {
-
-        get(ref(this.db, '/subject/' + this.examSaveInfo["subject"] + '/questions/' + this.examSaveInfo["option"][i]["questionIndex"])).then((snapshot) => {
-          const questionData = snapshot.val();
+      loadQuestions(this.examSaveInfo["subject"]).then((questions) => {
+        for (let i = 0; i < this.examSaveInfo["option"].length; i++) {
+          const questionData = questions[this.examSaveInfo["option"][i]["questionIndex"]];
           let result = false;
           if (this.examSaveInfo["option"][i]["chooseAnswer"] == questionData["correct"]) {
             numRightQuestion++;
@@ -64,14 +61,13 @@ class ReviewContainer extends Component {
             "result": result,
           }
           this.information["questionResultArray"].push(object);
-          this.information["numRightQuestion"] = numRightQuestion;
-          this.information["rightRatio"] = (numRightQuestion / this.examSaveInfo["option"].length * 100).toFixed(0) + "%";
-          this.information["totalQuestion"] = i + 1;
+        }
+        this.information["numRightQuestion"] = numRightQuestion;
+        this.information["rightRatio"] = (numRightQuestion / this.examSaveInfo["option"].length * 100).toFixed(0) + "%";
+        this.information["totalQuestion"] = this.examSaveInfo["option"].length;
 
-          this.setState({ data: this.information });
-        })
-
-      }
+        this.setState({ data: this.information });
+      });
 
     } else {
       window.location.href = '/#/exam';

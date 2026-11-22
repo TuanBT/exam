@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import Firebase from '../firebase.js';
-import { ref, set, get, update, remove, child, onValue } from "firebase/database";
 
 
 class TestContainer extends Component {
